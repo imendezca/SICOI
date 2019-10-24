@@ -85,12 +85,26 @@ CREATE OR ALTER PROCEDURE PA_DESPACHO_ListarDespachos
 AS
 --=============================================================
 -- Autor:	          Isaac Santiago Méndez Castillo
--- Fecha de creación: 18-10-2019
+-- Fecha de creación: 23-10-2019
 -- Descripción:       
 --=============================================================
 BEGIN
 	SET NOCOUNT ON;
 	SELECT CodDespacho, Nombre, IDCircuito
 	FROM DESPACHO;
+END
+GO
+
+CREATE OR ALTER PROCEDURE PA_PRIORIDAD_ListarPrioridades
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 24-10-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	SET NOCOUNT ON;
+	SELECT IDPrioridad, Prioridad
+	FROM PRIORIDAD;
 END
 GO

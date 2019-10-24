@@ -41,10 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Implementaciones\DespachoLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PJ_SICOI.AccesoDatos\PJ_SICOI.AccesoDatos.csproj">
+      <Project>{fbb1aec2-13bb-48bb-9700-006c24b81814}</Project>
+      <Name>PJ_SICOI.AccesoDatos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PJ_SICOI.Entidades\PJ_SICOI.Entidades.csproj">
       <Project>{ab58304d-b2cb-42d3-9a32-28ae6d3b2f53}</Project>
       <Name>PJ_SICOI.Entidades</Name>

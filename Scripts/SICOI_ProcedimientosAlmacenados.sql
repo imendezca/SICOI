@@ -68,7 +68,7 @@ BEGIN
 	WHERE IDConsecutivo = 'FAX';
 END;
 
-CREATE PROCEDURE PA_DESPACHO_InsertarNuevov @P_CodDespacho nvarchar(4), @P_Nombre nvarchar(50), @P_IDCircuito int = 2
+CREATE OR ALTER PROCEDURE PA_DESPACHO_InsertarNuevo @P_CodDespacho nvarchar(4), @P_Nombre nvarchar(50), @P_IDCircuito int = 2
 AS
 --=============================================================
 -- Autor:	          Isaac Santiago Méndez Castillo
@@ -78,5 +78,19 @@ AS
 BEGIN
 	INSERT INTO DESPACHO (CodDespacho, Nombre, IDCircuito)
 	VALUES				 (@P_CodDespacho, @P_Nombre, @P_IDCircuito);
+END
+GO
+
+CREATE OR ALTER PROCEDURE PA_DESPACHO_ListarDespachos
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 18-10-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	SET NOCOUNT ON;
+	SELECT CodDespacho, Nombre, IDCircuito
+	FROM DESPACHO;
 END
 GO

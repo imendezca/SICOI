@@ -81,6 +81,19 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE PA_ERROR_InsertarError @P_DetalleError nvarchar(1000)
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 30-10-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	INSERT INTO ERROR(Detalle)
+	VALUES			 (@P_DetalleError);
+END
+GO
+
 CREATE OR ALTER PROCEDURE PA_DESPACHO_ListarDespachos
 AS
 --=============================================================
@@ -106,5 +119,19 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT IDPrioridad, Prioridad
 	FROM PRIORIDAD;
+END
+GO
+
+CREATE OR ALTER PROCEDURE PA_CARACTERISTICA_ListarCaracteristicas
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 29-10-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	SET NOCOUNT ON;
+	SELECT IDCaracteristica, Caracteristica
+	FROM CARACTERISTICA;
 END
 GO

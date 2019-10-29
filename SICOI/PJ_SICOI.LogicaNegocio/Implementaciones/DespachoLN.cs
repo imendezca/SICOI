@@ -20,6 +20,7 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
             catch (Exception e)
             {
                 string error = e.Message;
+                ErrorLN.InsertarError("[LogicaNegocio, DespachoLN - ListarDespachos]: " + error);
                 return null;
             }
         }
@@ -47,7 +48,8 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
             catch (Exception e)
             {
                 string error = e.Message;
-                return null;
+                ErrorLN.InsertarError("[LogicaNegocio, DespachoLN - InsertarDespacho]: " + error);
+                return error;
             }
         }
     }

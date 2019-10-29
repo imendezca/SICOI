@@ -20,6 +20,7 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
             catch (Exception e)
             {
                 string error = e.Message;
+                ErrorLN.InsertarError("[LogicaNegocio,  PrioridadLN - ListarPrioridades]: " + error);
                 return null;
             }
         }

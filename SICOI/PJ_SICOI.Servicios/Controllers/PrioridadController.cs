@@ -13,6 +13,7 @@ namespace PJ_SICOI.Servicios.Controllers
     public class PrioridadController : ApiController
     {
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage ConsultaPrioridades()
         {
             try

@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementaciones\CaracteristicaLN.cs" />
     <Compile Include="Implementaciones\DespachoLN.cs" />
+    <Compile Include="Implementaciones\ErrorLN.cs" />
     <Compile Include="Implementaciones\PrioridadLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

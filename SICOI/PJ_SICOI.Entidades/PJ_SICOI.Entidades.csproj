@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modelos\CaracteristicaModel.cs" />
     <Compile Include="Modelos\DespachoModel.cs" />
+    <Compile Include="Modelos\ErrorModel.cs" />
     <Compile Include="Modelos\PrioridadModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

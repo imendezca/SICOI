@@ -29,7 +29,7 @@ CREATE OR ALTER PROCEDURE PA_InsertarFaxNuevo @P_CodDespacho nvarchar(4), @P_Asu
 											  @P_Tipo nvarchar(10), @P_CantFolios int, @P_IDPrioridad int,
 											  @P_IDCaracteristica int, @P_Resultado bit, @P_Actor nvarchar(30),
 											  @P_Demandado nvarchar(30), @P_IDUsuarioIngreso nvarchar(20), @P_Observaciones nvarchar(250),
-											  @P_NombreArchivo nvarchar(50)
+											  @P_NombreArchivo nvarchar(50), @P_ResultadoNuevoFax nvarchar(13) OUTPUT
 AS
 --=============================================================
 -- Autor:	          Isaac Santiago Méndez Castillo
@@ -50,13 +50,18 @@ BEGIN
 				  getDate(), @P_Expediente, @P_Tipo, @P_CantFolios, 
 				  @P_IDPrioridad, @P_IDCaracteristica, @P_Resultado, @P_Actor, 
 				  @P_Demandado, @P_IDUsuarioIngreso, @P_Observaciones, @P_NombreArchivo);
+	SET @P_ResultadoNuevoFax = @V_PeriodoActual + @P_CodDespacho + RIGHT('00000' + Ltrim(Rtrim(@V_ConsecutivoNuevo)),5);
 END;
 GO
 
-EXEC PA_InsertarFaxNuevo '0001', 'Prueba #1', '190000010001PR', 'Recibido', 
-						 10, 1, 1, 1, 'Fulano', 'Mengano',
-						 'imendezca', 'Observaciones cachete', 'nombre vacilon';
-GO
+
+BEGIN
+	declare @V_Result nvarchar(13);
+	EXEC PA_InsertarFaxNuevo '0001', 'Prueba #2', '190000010001PR', 'Recibido', 
+						 10, 1, 1, 1, 'Fulanito', 'Menganito',
+						 'imendezca', 'Observaciones imaginate', 'nombre corrongo', @P_ResultadoNuevoFax = @V_Result OUTPUT;
+	SELECT @V_Result;
+END;
 
 CREATE OR ALTER TRIGGER TRI_FAX
 ON FAX
@@ -135,3 +140,11 @@ BEGIN
 	FROM CARACTERISTICA;
 END
 GO
+
+
+
+
+
+SELECT Periodo + RIGHT('00000' + Ltrim(Rtrim(ConsFax)),5)
+FROM FAX
+WHERE Periodo + RIGHT('00000' + Ltrim(Rtrim(ConsFax)),5) LIKE '%19%';

@@ -12,14 +12,13 @@ namespace PJ_SICOI.Servicios.Controllers
     public class CaracteristicaController : ApiController
     {
         [HttpGet]
-        [AllowAnonymous]
         public HttpResponseMessage ConsultaCaracteristicas()
         {
             try
             {
                 var V_Result = new HttpResponseMessage(HttpStatusCode.OK);
-                List<CaracteristicaModel> C_Caracteristicas = CaracteristicaLN.ListarCaracteristicas();
-                string json = JsonConvert.SerializeObject(C_Caracteristicas);
+                List<CaracteristicaModel> V_Caracteristicas = CaracteristicaLN.ListarCaracteristicas();
+                string json = JsonConvert.SerializeObject(V_Caracteristicas);
                 V_Result.Content = new StringContent(json);
                 V_Result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                 return V_Result;

@@ -74,6 +74,7 @@ CREATE TABLE FAX (
     IDConfirmacion int  NULL,
     Observaciones nvarchar(250)  NOT NULL,
     NombreArchivo nvarchar(50)  NOT NULL,
+	CodDespachoActual nvarchar(4)  NOT NULL,
     CONSTRAINT FAX_pk PRIMARY KEY  (Periodo,CodDespacho,ConsFax)
 );
 
@@ -125,6 +126,10 @@ ALTER TABLE FAX ADD CONSTRAINT FAX_CARACTERISTICA
 ALTER TABLE FAX ADD CONSTRAINT FAX_DESPACHO
     FOREIGN KEY (CodDespacho)
     REFERENCES DESPACHO (CodDespacho);
+	
+ALTER TABLE FAX ADD CONSTRAINT FAX_DESPACHO_Actual
+   FOREIGN KEY (CodDespachoActual)
+   REFERENCES DESPACHO (CodDespacho);
 
 -- Reference: FAX_PRIORIDAD (table: FAX)
 ALTER TABLE FAX ADD CONSTRAINT FAX_PRIORIDAD

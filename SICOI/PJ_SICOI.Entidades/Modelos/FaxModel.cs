@@ -17,16 +17,19 @@ namespace PJ_SICOI.Entidades.Modelos
         public string Tipo { get; set; }
         public int CantFolios { get; set; }
         public int IDPrioridad { get; set; }
+        public string PrioridadNombre { get; set; }
         public int IDCaracteristica { get; set; }
+        public string CaracteristicaNombre { get; set; }
         public bool Resultado { get; set; }
         public string Actor { get; set; }
         public string Demandado { get; set; }
         public string IDUsuarioIngreso { get; set; }
         public string UsuarioComprueba { get; set; }
-        public DateTime FechaHoraRecibido { get; set; }
+        public DateTime? FechaHoraRecibido { get; set; }
         public string IDUsuarioRecibido { get; set; }
         public int IDConfirmacion { get; set; }
         public string Observaciones { get; set; }
         public string NombreArchivo { get; set; }
+        public string ConsecutivoCompleto { get; set; }
     }
 }

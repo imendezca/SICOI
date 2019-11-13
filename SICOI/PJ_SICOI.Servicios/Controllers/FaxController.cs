@@ -15,6 +15,54 @@ namespace PJ_SICOI.Servicios.Controllers
 {
     public class FaxController : ApiController
     {
+        string L_RutaDestinoArchivos = "E:\\Otra\\Archivos";
+
+        [HttpGet]
+        public HttpResponseMessage ConsultaFaxPorConsecutivo(string ConsecutivoCompleto)
+        {
+            var respuesta = new HttpResponseMessage(HttpStatusCode.OK);
+            try
+            {
+                List<FaxModel> faxes = FaxLN.ConsultaFaxesPorConsecutivo(ConsecutivoCompleto);
+                string json = JsonConvert.SerializeObject(faxes);
+                respuesta.Content = new StringContent(json);
+                respuesta.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                ErrorLN.InsertarError(error);
+                respuesta = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                string json = JsonConvert.SerializeObject("Surgió un problema al consultar los faxes. " + error);
+                respuesta.Content = new StringContent(json);
+                return respuesta;
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ConsultaFaxPorDespacho(string CodDespacho)
+        {
+            var respuesta = new HttpResponseMessage(HttpStatusCode.OK);
+            try
+            {
+                List<FaxModel> faxes = FaxLN.ListarFaxes(CodDespacho);
+                string json = JsonConvert.SerializeObject(faxes);
+                respuesta.Content = new StringContent(json);
+                respuesta.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                ErrorLN.InsertarError(error);
+                respuesta = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                string json = JsonConvert.SerializeObject("Surgió un problema al consultar los faxes. " + error);
+                respuesta.Content = new StringContent(json);
+                return respuesta;
+            }
+        }
+
         [HttpPost]
         public HttpResponseMessage NuevoFax(FaxModel fax)
         {
@@ -41,7 +89,6 @@ namespace PJ_SICOI.Servicios.Controllers
         [HttpPost]
         public async Task<string> SubirDocumento()
         {
-            string rutaDestinoArchivos = "E:\\Otra\\Archivos";
             string rutaArchivosTemporales = "E:\\Otra\\Temp";
             var provider = new MultipartFormDataStreamProvider(rutaArchivosTemporales);
 
@@ -61,8 +108,8 @@ namespace PJ_SICOI.Servicios.Controllers
                     name = name.Trim('"');
 
                     var localFileName = archivo.LocalFileName;
-                    string filePath = Path.Combine(rutaDestinoArchivos, name);
-                    filePath = VerificaExiste(filePath, name, rutaDestinoArchivos);
+                    string filePath = Path.Combine(L_RutaDestinoArchivos, name);
+                    filePath = VerificaExiste(filePath, name, L_RutaDestinoArchivos);
                     /*
                      * Activar en caso de que se necesite otro usuario para guardar archivos
                      * using (new Impersonator("[USUARIO]", "[DOMINIO]PODER-JUDICIAL", "[CONTRASÑA]"))
@@ -102,6 +149,25 @@ namespace PJ_SICOI.Servicios.Controllers
             {
                 return RutaArchivo;
             }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DescargarDocumento(string NombreArchivo)
+        {
+            if (String.IsNullOrEmpty(NombreArchivo))
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            string localFilePath;
+
+            localFilePath = Path.Combine(L_RutaDestinoArchivos, NombreArchivo);
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(new FileStream(localFilePath, FileMode.Open, FileAccess.Read));
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = NombreArchivo;
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+
+            return response;
         }
     }
 }

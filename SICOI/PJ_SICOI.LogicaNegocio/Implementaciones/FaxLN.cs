@@ -11,6 +11,33 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
 {
     public class FaxLN
     {
+        public static List<FaxModel> ConsultaFaxesPorConsecutivo(string ConsecutivoCompleto)
+        {
+            try
+            {
+                List<FaxModel> faxes = FaxAD.ConsultaFaxesPorConsecutivo(ConsecutivoCompleto);
+                return faxes;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                ErrorLN.InsertarError("[LogicaNegocio, FaxLN - ConsultaFaxPorConsecutivo]: " + error);
+                return null;
+            }
+        }
+        public static List<FaxModel> ListarFaxes(string CodigoDespacho) {
+            try
+            {
+                List<FaxModel> faxes = FaxAD.ConsultaFaxes(CodigoDespacho);
+                return faxes;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                ErrorLN.InsertarError("[LogicaNegocio, FaxLN - ListarFaxes]: " + error);
+                return null;
+            }
+        }
         public static string InsertarFaxNuevo(FaxModel nuevoFax)
         {
             if (nuevoFax.Asunto == null || nuevoFax.CodDespacho == null || nuevoFax.Expediente == null ||

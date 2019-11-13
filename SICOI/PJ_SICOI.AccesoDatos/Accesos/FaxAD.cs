@@ -11,6 +11,20 @@ namespace PJ_SICOI.AccesoDatos.Accesos
 {
     public class FaxAD
     {
+        public static List<FaxModel> ConsultaFaxesPorConsecutivo(string ConsecutivoCompleto)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
+            {
+                return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxPorConsecutivoCompleto @P_Consecutivo", new { P_Consecutivo = ConsecutivoCompleto }).ToList();
+            }
+        }
+        public static List<FaxModel> ConsultaFaxes(string CodigoDespacho)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
+            {
+                return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxPorDespacho @P_CodDespacho", new { P_CodDespacho = CodigoDespacho }).ToList();
+            }
+        }
         public static string AgregarFax(FaxModel NuevoFax)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))

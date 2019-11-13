@@ -25,6 +25,46 @@ SELECT @var cons;
 END;
 GO
 
+CREATE OR ALTER PROCEDURE PA_FAX_ConsultaFaxPorConsecutivoCompleto @P_Consecutivo nvarchar(12)
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 13-11-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	SELECT F.Periodo, F.CodDespacho, F.ConsFax, F.Asunto, 
+		   F.FechaHoraIngreso, F.Expediente, F.Tipo, F.CantFolios, 
+		   F.IDPrioridad, F.IDCaracteristica, F.Resultado, F.Actor, 
+		   F.Demandado, F.IDUsuarioIngreso, F.UsuarioComprueba, F.FechaHoraRecibido,
+		   F.IDUsuarioRecibido, F.IDConfirmacion, F.Observaciones, F.NombreArchivo, 
+		   F.CodDespachoActual, C.Caracteristica CaracteristicaNombre, P.Prioridad PrioridadNombre,
+		   F.Periodo + F.CodDespacho + RIGHT('0000' + Ltrim(Rtrim(ConsFax)),4) AS ConsecutivoCompleto
+	FROM FAX F
+	JOIN CARACTERISTICA C ON F.IDCaracteristica = C.IDCaracteristica
+	JOIN PRIORIDAD P ON F.IDPrioridad = P.IDPrioridad
+	WHERE F.Periodo + F.CodDespacho + RIGHT('0000' + Ltrim(Rtrim(F.ConsFax)),4) LIKE '%'+@P_Consecutivo+'%';
+END;
+GO
+
+CREATE OR ALTER PROCEDURE PA_FAX_ConsultaFaxPorDespacho @P_CodDespacho nvarchar(4)
+AS
+--=============================================================
+-- Autor:	          Isaac Santiago Méndez Castillo
+-- Fecha de creación: 11-11-2019
+-- Descripción:       
+--=============================================================
+BEGIN
+	SELECT F.Periodo, F.CodDespacho, F.ConsFax, F.Asunto, 
+		   F.FechaHoraIngreso, F.Expediente, F.CantFolios, F.IDPrioridad, 
+		   P.Prioridad PrioridadNombre, F.IDUsuarioRecibido,
+		   F.Periodo + F.CodDespacho + RIGHT('00000' + Ltrim(Rtrim(ConsFax)),4) AS ConsecutivoCompleto
+	FROM FAX F
+	JOIN PRIORIDAD P ON F.IDPrioridad = P.IDPrioridad
+	WHERE F.CodDespachoActual = @P_CodDespacho;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE PA_FAX_InsertarFaxNuevo @P_CodDespacho nvarchar(4), @P_Asunto nvarchar(20), @P_Expediente nvarchar(14),
 											      @P_Tipo nvarchar(10), @P_CantFolios int, @P_IDPrioridad int,
 											      @P_IDCaracteristica int, @P_Resultado bit, @P_Actor nvarchar(30),
@@ -49,11 +89,13 @@ BEGIN
 	INSERT INTO FAX(Periodo, CodDespacho, ConsFax, Asunto, 
 					FechaHoraIngreso, Expediente, Tipo, CantFolios, 
 					IDPrioridad, IDCaracteristica, Resultado, Actor, 
-					Demandado, IDUsuarioIngreso, Observaciones, NombreArchivo)
+					Demandado, IDUsuarioIngreso, Observaciones, NombreArchivo,
+					CodDespachoActual)
 		   VALUES(@V_PeriodoActual, @P_CodDespacho, @V_ConsecutivoNuevo, @P_Asunto, 
 				  getDate(), @P_Expediente, @P_Tipo, @P_CantFolios, 
 				  @P_IDPrioridad, @P_IDCaracteristica, @P_Resultado, @P_Actor, 
-				  @P_Demandado, @P_IDUsuarioIngreso, @P_Observaciones, @V_ConsecutivoCompleto + '_' + @P_Expediente);
+				  @P_Demandado, @P_IDUsuarioIngreso, @P_Observaciones, @V_ConsecutivoCompleto + '_' + @P_Expediente + '.pdf',
+				  '0001');
 	SET @P_ResultadoNuevoFax = @V_ConsecutivoCompleto;
 END;
 GO

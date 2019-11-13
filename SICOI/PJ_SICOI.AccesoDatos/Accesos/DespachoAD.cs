@@ -15,7 +15,7 @@ namespace PJ_SICOI.AccesoDatos.Accesos
         /// Clase donde se almacenan las funciones necesarias para la conexión con la base de datos
         /// con lo que respecta a la entidad de despacho.
         /// </summary>
-        public static List<DespachoModel> ListaDespachos()
+        public static List<DespachoModel> ConsultaDespachos()
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
             {

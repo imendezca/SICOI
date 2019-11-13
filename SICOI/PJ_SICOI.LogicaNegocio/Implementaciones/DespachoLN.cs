@@ -14,7 +14,7 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
         {
             try
             {
-                List<DespachoModel> despachos = DespachoAD.ListaDespachos();
+                List<DespachoModel> despachos = DespachoAD.ConsultaDespachos();
                 return despachos;
             } 
             catch (Exception e)

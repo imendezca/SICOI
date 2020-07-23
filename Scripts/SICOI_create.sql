@@ -4,15 +4,13 @@
 -- tables
 -- Table: BITACORA
 CREATE TABLE BITACORA (
-    ID int  NOT NULL IDENTITY(1, 1),
-    FechaYHora datetime  NOT NULL,
-    Servidor nvarchar(20)  NOT NULL,
-    IDUsuario nvarchar(20)  NOT NULL,
-    Accion nvarchar(20)  NOT NULL,
-    Descripcion nvarchar(250)  NOT NULL,
-    Actualiza nvarchar(1000)  NOT NULL,
-    Pantalla nvarchar(50)  NOT NULL,
-    CONSTRAINT BITACORA_pk PRIMARY KEY  (ID)
+   ID int  NOT NULL IDENTITY(1, 1),
+   FechaHora datetime  NOT NULL,
+   IDUsuario nvarchar(20)  NOT NULL,
+   Accion nvarchar(20)  NULL,
+   Descripcion nvarchar(250)  NOT NULL,
+   Pantalla nvarchar(50)  NULL,
+   CONSTRAINT BITACORA_pk PRIMARY KEY  (ID)
 );
 
 -- Table: CARACTERISTICA
@@ -31,10 +29,10 @@ CREATE TABLE CIRCUITO (
 
 -- Table: CONSECUTIVO
 CREATE TABLE CONSECUTIVO (
-    IDConsecutivo nvarchar(15)  NOT NULL,
-    Periodo nvarchar(4)  NOT NULL,
-    NumConsecutivo int  NOT NULL,
-    CONSTRAINT CONSECUTIVO_pk PRIMARY KEY  (IDConsecutivo)
+   IDConsecutivo nvarchar(15)  NOT NULL,
+   Periodo nvarchar(4)  NOT NULL,
+   NumConsecutivo int  NOT NULL,
+   CONSTRAINT CONSECUTIVO_pk PRIMARY KEY  (IDConsecutivo,Periodo)
 );
 
 -- Table: DESPACHO
@@ -76,6 +74,21 @@ CREATE TABLE FAX (
     NombreArchivo nvarchar(50)  NOT NULL,
 	CodDespachoActual nvarchar(4)  NOT NULL,
     CONSTRAINT FAX_pk PRIMARY KEY  (Periodo,CodDespacho,ConsFax)
+);
+
+-- Table: MOVIMIENTOFAX
+CREATE TABLE MOVIMIENTOFAX (
+   IDMovimiento int  NOT NULL IDENTITY(1, 1),
+   FAX_Periodo nvarchar(4)  NOT NULL,
+   FAX_CodDespacho nvarchar(4)  NOT NULL,
+   FAX_ConsFax int  NOT NULL,
+   HoraYFecha datetime  NOT NULL,
+   IDUsuario nvarchar(20)  NOT NULL,
+   Accion nvarchar(20)  NOT NULL,
+   Campo nvarchar(50)  NULL,
+   DatoAnterior nvarchar(100)  NULL,
+   DatoNuevo nvarchar(100)  NOT NULL,
+   CONSTRAINT MOVIMIENTOFAX_pk PRIMARY KEY  (IDMovimiento)
 );
 
 -- Table: PRIORIDAD
@@ -150,6 +163,16 @@ ALTER TABLE FAX ADD CONSTRAINT FAX_USUARIO_INGRESO
 ALTER TABLE FAX ADD CONSTRAINT FAX_USUARIO_RECIBIDO
     FOREIGN KEY (IDUsuarioRecibido)
     REFERENCES USUARIO (IDUsuario);
+
+-- Reference: MOVIMIENTOFAX_USUARIO (table: MOVIMIENTOFAX)
+ALTER TABLE MOVIMIENTOFAX ADD CONSTRAINT MOVIMIENTOFAX_USUARIO
+   FOREIGN KEY (IDUsuario)
+   REFERENCES USUARIO (IDUsuario);
+   
+  -- Reference: MOVIMIENTOFAX_FAX (table: MOVIMIENTOFAX)
+ALTER TABLE MOVIMIENTOFAX ADD CONSTRAINT MOVIMIENTOFAX_FAX
+   FOREIGN KEY (FAX_Periodo,FAX_CodDespacho,FAX_ConsFax)
+   REFERENCES FAX (Periodo,CodDespacho,ConsFax);
 
 -- Reference: USUARIO_DESPACHO (table: USUARIO)
 ALTER TABLE USUARIO ADD CONSTRAINT USUARIO_DESPACHO

@@ -41,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modelos\BitacoraModel.cs" />
     <Compile Include="Modelos\CaracteristicaModel.cs" />
     <Compile Include="Modelos\DespachoModel.cs" />
     <Compile Include="Modelos\ErrorModel.cs" />
     <Compile Include="Modelos\FaxModel.cs" />
+    <Compile Include="Modelos\Fax_FiltroModel.cs" />
     <Compile Include="Modelos\PrioridadModel.cs" />
+    <Compile Include="Modelos\UsuarioModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

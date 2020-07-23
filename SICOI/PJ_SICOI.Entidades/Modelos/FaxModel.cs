@@ -10,6 +10,8 @@ namespace PJ_SICOI.Entidades.Modelos
     {
         public string Periodo { get; set; }
         public string CodDespacho { get; set; }
+        public string CodDespachoActual { get; set; }
+        public string NombreDespacho { get; set; }
         public int ConsFax { get; set; }
         public string Asunto { get; set; }
         public DateTime FechaHoraIngreso { get; set; }

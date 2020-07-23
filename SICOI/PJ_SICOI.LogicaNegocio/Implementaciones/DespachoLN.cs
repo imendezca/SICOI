@@ -40,7 +40,7 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
                 /*
                 * Comentario por imendezca: Se omite el código de circuito en esta función ya que el procedimiento almacenado 
                 * ingresa el código del circuito por defecto, su parametro por defecto es Goicoechea, por el momento solo funciona
-                * para Goiecoeceha.
+                * para Goicoechea.
                 */
                 string resultado = DespachoAD.AgregarDespacho(CodigoDespacho, NombreDespacho);
                 return resultado;

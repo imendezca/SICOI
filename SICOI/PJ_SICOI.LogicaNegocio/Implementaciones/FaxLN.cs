@@ -11,12 +11,12 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
 {
     public class FaxLN
     {
-        public static List<FaxModel> ConsultaFaxesPorConsecutivo(string ConsecutivoCompleto)
+        public static FaxModel ConsultaFaxPorConsecutivo(string ConsecutivoCompleto)
         {
             try
             {
-                List<FaxModel> faxes = FaxAD.ConsultaFaxesPorConsecutivo(ConsecutivoCompleto);
-                return faxes;
+                FaxModel fax = FaxAD.ConsultaFaxPorConsecutivo(ConsecutivoCompleto);
+                return fax;
             }
             catch (Exception e)
             {
@@ -25,7 +25,8 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
                 return null;
             }
         }
-        public static List<FaxModel> ListarFaxes(string CodigoDespacho) {
+        public static List<FaxModel> ListarFaxes(string CodigoDespacho)
+        {
             try
             {
                 List<FaxModel> faxes = FaxAD.ConsultaFaxes(CodigoDespacho);
@@ -34,7 +35,21 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
             catch (Exception e)
             {
                 string error = e.Message;
-                ErrorLN.InsertarError("[LogicaNegocio, FaxLN - ListarFaxes]: " + error);
+                ErrorLN.InsertarError("[LogicaNegocio, FaxLN - ListarFaxes(por despacho)]: " + error);
+                return null;
+            }
+        }
+        public static List<FaxModel> ListarFaxes(Fax_FiltroModel FiltroFax)
+        {
+            try
+            {
+                List<FaxModel> faxes = FaxAD.ConsultaFaxes(FiltroFax);
+                return faxes;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                ErrorLN.InsertarError("[LogicaNegocio, FaxLN - ListarFaxes(por filtro)]: " + error);
                 return null;
             }
         }
@@ -50,6 +65,14 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
             try
             {
                 string resultado = FaxAD.AgregarFax(nuevoFax);
+
+                BitacoraModel V_NuevaBitacora = new BitacoraModel();
+                V_NuevaBitacora.Accion = "Insertar";
+                V_NuevaBitacora.Descripcion = "Insertó el nuevo fax: " + resultado;
+                V_NuevaBitacora.IDUsuario = nuevoFax.IDUsuarioIngreso;
+                V_NuevaBitacora.Pantalla = "Ingresar nuevo fax";
+                BitacoraLN.InsertarBitacoraNueva(V_NuevaBitacora);
+
                 return resultado;
             }
             catch (Exception e)
@@ -58,7 +81,39 @@ namespace PJ_SICOI.LogicaNegocio.Implementaciones
                 ErrorLN.InsertarError("[LogicaNegocio, FaxLN - InsertarFaxNuevo]: " + error);
                 return error;
             }
-            
+        }
+        public static bool EnviarFaxAlDespacho(string ConsecutivoCompletoFax)
+        {
+            if (ConsecutivoCompletoFax == null)
+            {
+                throw new InvalidOperationException("No puede ingresar valores vacíos.");
+            }
+            string resultado = FaxAD.EnviarFaxADespacho(ConsecutivoCompletoFax);
+            if(resultado == "1")
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool RecibirFax(string ConsecutivoFaxCompleto, string IDUsuarioRecibe)
+        {
+            if (ConsecutivoFaxCompleto == null || IDUsuarioRecibe == null)
+            {
+                throw new InvalidOperationException("No puede ingresar valores vacíos.");
+            }
+            if (!UsuarioLN.UsuarioPerteneceACorreoInterno(IDUsuarioRecibe))
+            {
+                string resultado = FaxAD.RecibirFax(ConsecutivoFaxCompleto, IDUsuarioRecibe);
+                if (resultado == "1")
+                {
+                    return true;
+                }
+            } 
+            else
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

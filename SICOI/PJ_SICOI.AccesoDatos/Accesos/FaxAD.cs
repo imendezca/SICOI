@@ -11,11 +11,11 @@ namespace PJ_SICOI.AccesoDatos.Accesos
 {
     public class FaxAD
     {
-        public static List<FaxModel> ConsultaFaxesPorConsecutivo(string ConsecutivoCompleto)
+        public static FaxModel ConsultaFaxPorConsecutivo(string ConsecutivoCompleto)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
             {
-                return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxPorConsecutivoCompleto @P_Consecutivo", new { P_Consecutivo = ConsecutivoCompleto }).ToList();
+                return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxPorConsecutivoCompleto @P_Consecutivo", new { P_Consecutivo = ConsecutivoCompleto }).ToList().FirstOrDefault();
             }
         }
         public static List<FaxModel> ConsultaFaxes(string CodigoDespacho)
@@ -23,6 +23,42 @@ namespace PJ_SICOI.AccesoDatos.Accesos
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
             {
                 return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxPorDespacho @P_CodDespacho", new { P_CodDespacho = CodigoDespacho }).ToList();
+            }
+        }
+        public static List<FaxModel> ConsultaFaxes(Fax_FiltroModel FiltroFax)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
+            {
+                var V_Parametros = new DynamicParameters();
+
+                V_Parametros.Add("@P_CodDespacho", FiltroFax.CodDespacho);
+                V_Parametros.Add("@P_FechaInicial", FiltroFax.FechaInicial);
+                V_Parametros.Add("@P_FechaFinal", FiltroFax.FechaFinal);
+                V_Parametros.Add("@P_Consecutivo", FiltroFax.ConsecutivoFax);
+                V_Parametros.Add("@P_Expediente", FiltroFax.Expediente);
+                V_Parametros.Add("@P_Asunto", FiltroFax.Asunto);
+                V_Parametros.Add("@P_Prioridad", FiltroFax.IDPrioridad);
+
+                return connection.Query<FaxModel>("dbo.PA_FAX_ConsultaFaxFiltrado", V_Parametros, commandType: CommandType.StoredProcedure).ToList();
+            }
+        }
+        public static string EnviarFaxADespacho(string ConsecutivoFax)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
+            {
+                return connection.Execute("dbo.PA_FAX_EnviarFaxAlDespacho @P_ConsecutivoFax", new { P_ConsecutivoFax = ConsecutivoFax }).ToString();
+            }
+        }
+
+        public static string RecibirFax(string ConsecutivoFax, string IDUsuarioRecibe)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.StringConexion("SICOI_DB")))
+            {
+                return connection.Execute("dbo.PA_FAX_RecibirFax @P_ConsecutivoFax, @P_IDUsuario", new
+                {
+                    P_ConsecutivoFax = ConsecutivoFax,
+                    P_IDUsuario = IDUsuarioRecibe
+                }).ToString();
             }
         }
         public static string AgregarFax(FaxModel NuevoFax)
